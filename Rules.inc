@@ -16,8 +16,12 @@ CFLAGS= -O0 -static -Wall -nostartfiles -nostdlib       \
 	-DKERNEL_VERSION="\"$(KERNEL_VERSION)\""        \
 	-D_KERNEL_ -I$(INCLUDE)
 
+%o:%c
+	@echo "$<"
+	$(AT)$(CC) -c $(CFLAGS) $< -o $@
 %o:%S
-	$(CC) -c $(INCLUDE) $< -o $@
+	@echo "$<"
+	$(AT)$(CC) -c $(CFLAGS) $< -o $@
 
 dummy: all
 	
@@ -28,9 +32,9 @@ clean_sub_dirs:
 	$(AT)for file in $(SUB_DIRS); do echo $$file; make SOURCE_ROOT=$(SOURCE_ROOT) -C $$file clean; done
 
 library: $(OBJECTS)
-	ar -rc $(SOURCE_ROOT)/kernel/`basename $$PWD`.a $(OBJECTS)
+	$(AT)ar -rc $(SOURCE_ROOT)/kernel/`basename $$PWD`.a $(OBJECTS)
 
 LIBRARIES=$(patsubst %,%.a,$(SUB_DIRS))
 
 clean:
-	exec find . -name "*.o" -exec rm -f {} \;
+	$(AT)exec find . -name "*.o" -exec rm -f {} \;
