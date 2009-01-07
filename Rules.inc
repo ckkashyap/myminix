@@ -26,15 +26,13 @@ CFLAGS= -O0 -static -Wall -nostartfiles -nostdlib       \
 dummy: all
 	
 process_sub_dirs:
-	$(AT)for file in $(SUB_DIRS); do echo $$file; make SOURCE_ROOT=$(SOURCE_ROOT) -C $$file; done
+	$(AT)for file in $(SUB_DIRS); do make SOURCE_ROOT=$(SOURCE_ROOT) -C $$file; done
 
 clean_sub_dirs:
-	$(AT)for file in $(SUB_DIRS); do echo $$file; make SOURCE_ROOT=$(SOURCE_ROOT) -C $$file clean; done
+	$(AT)for file in $(SUB_DIRS); do make SOURCE_ROOT=$(SOURCE_ROOT) -C $$file clean; done
 
 library: $(OBJECTS)
 	$(AT)ar -rc $(SOURCE_ROOT)/kernel/`basename $$PWD`.a $(OBJECTS)
 
 LIBRARIES=$(patsubst %,%.a,$(SUB_DIRS))
 
-clean:
-	$(AT)exec find . -name "*.o" -exec rm -f {} \;
