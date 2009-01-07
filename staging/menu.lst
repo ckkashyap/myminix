@@ -1,0 +1,3 @@
+title nasmkernel
+	root (cd)
+	kernel /kernel
