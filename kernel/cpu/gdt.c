@@ -68,16 +68,26 @@ int gdt_new_segment(
 		)
 {
 	int pos;
+	segment_descriptor *the_gdt;
+
+	/*
+	 * Loop through the GDT to find an empty slot
+	 */
 	for ( pos = 1; pos < MAX_GDT; pos++ )
 	{
-		if ( gdt[pos].type == 0 )
+		the_gdt = &gdt[pos];
+		if ( the_gdt->type == 0 )
 		{
-			gdt[pos].seg_length0_15 = (uint16_t)(length & 0xFFFF);
-			gdt[pos].base_addr0_15 = (uint16_t)(base & 0xFFFF);
-			gdt[pos].base_addr16_23 = (uint8_t)((base>>16) & 0xFF);
-			gdt[pos].flags = flags | access;
-			gdt[pos].type = type | ((length >> 16) & 0xf);
-			gdt[pos].base_addr24_31 = (uint8_t)((base>>24)&0xF);
+			/*
+			 * When an empty slot is found
+			 * fill it with the details provided
+			 */
+			the_gdt->seg_length0_15 = (uint16_t)(length & 0xFFFF);
+			the_gdt->base_addr0_15 = (uint16_t)(base & 0xFFFF);
+			the_gdt->base_addr16_23 = (uint8_t)((base>>16) & 0xFF);
+			the_gdt->flags = flags | access;
+			the_gdt->type = type | ((length >> 16) & 0xf);
+			the_gdt->base_addr24_31 = (uint8_t)((base>>24)&0xF);
 			return pos * 8;
 		}
 	}
