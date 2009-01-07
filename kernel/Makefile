@@ -3,8 +3,6 @@ include $(SOURCE_ROOT)/Rules.inc
 INCLUDE=$(SOURCE_ROOT)/include
 LINKER_SCRIPT=-Xlinker --script=kernel.ld
 
-
-
 SUB_DIRS=lib
 
 all: $(OBJECTS) process_sub_dirs
