@@ -1,7 +1,7 @@
 #include <types.h>
 #include <multiboot.h>
 #include <lib/string.h>
-#include <gdt.h>
+#include <cpu/gdt.h>
 
 /*
  * boot_stack is the stack used by the BSP (Boot Strap Processor)
