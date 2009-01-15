@@ -56,6 +56,18 @@ static void remove_range( void *start, void *end )
 	if ( end > mem_end ) mem_end = end;
 }
 
+static void add_physmem_range( void *start, void *end )
+{
+	memory_set( start, end + 1, 0 );
+}
+
+static void remove_physmem_range( void *start, void *end )
+{
+	memory_set( start, end + 1, 1 );
+}
+
+
+
 static void parse_map( memory_map_t* map, uint32_t count, callback_t callback)
 {
 	uint32_t i;
@@ -156,36 +168,21 @@ void bootstrap_memory( multiboot_info_t *mboot )
 
 
 
-#if 0
-
-
-
-	dmesg( "Required management size (%i) bytes for (%i) pages at [%p,%p]\n",
-					map_size, 
-					pages,
-					largest_start,
-					largest_start + map_size -1 );
-
-	assert( map_size <= (largest_end - largest_start + 1) );
 
 	init_physmem( mem_start, largest_start, pages );
 
-	parse_map( map, count, callback_physmem_add );
+	parse_map( map, count, add_physmem_range );
 
-	parse_modules( (module_t*)(mboot->mods_addr), mboot->mods_count,
-						callback_physmem_rem );
+	parse_modules( (module_t*)(mboot->mods_addr), mboot->mods_count, remove_physmem_range );
 
-	callback_physmem_rem( (void*)mboot, 
-							(void*)(mboot + sizeof(multiboot_info_t) - 1));
-
-	callback_physmem_rem( (void*)0, (void*)0xFFF );	// Never return NULL
-	callback_physmem_rem( (void*)0xB8000, (void*)0xFFFFF ); // No VGA etc
-	callback_physmem_rem( KERNEL_START, KERNEL_END );
-	callback_physmem_rem( largest_start, largest_start + map_size - 1 );
+	remove_physmem_range( (void*)mboot, (void*)(mboot + sizeof(multiboot_info_t) - 1));
+	remove_physmem_range( (void*)0, (void*)0xFFF );	// Never return NULL
+	remove_physmem_range( (void*)0xB8000, (void*)0xFFFFF ); // No VGA etc
+	remove_physmem_range( KERNEL_START, KERNEL_END );
+	remove_physmem_range( largest_start, largest_start + map_size - 1 );
 
 
 	show_memory_map();
-#endif
 }
 
 
