@@ -1,6 +1,6 @@
 #include <types.h>
 #include <io.h>
-#include <ioapic.h>
+#include <interrupts/ioapic.h>
 
 
 int usingIOAPIC = 0;
