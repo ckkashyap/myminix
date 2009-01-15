@@ -17,4 +17,8 @@ void init( unsigned int magic, multiboot_info_t *mb_info ){
 
 	init_gdt();
 
+	bootstrap_memory( mb_info );
+
+	kprintf("END");
+	while(1);
 }
