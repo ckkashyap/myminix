@@ -1,6 +1,7 @@
 #include <multiboot.h>
 #include <memory/bootstrap.h>
 #include <types.h>
+#include <lib/string.h>
 
 
 

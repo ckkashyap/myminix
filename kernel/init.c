@@ -19,6 +19,8 @@ void init( unsigned int magic, multiboot_info_t *mb_info ){
 
 	bootstrap_memory( mb_info );
 
+	init_ioapic();
+
 	kprintf("END");
 	while(1);
 }
