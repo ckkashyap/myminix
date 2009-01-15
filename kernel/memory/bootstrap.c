@@ -124,6 +124,9 @@ void bootstrap_memory( multiboot_info_t *mboot )
 	   parse_map goes through various blocks of memory
 	   and sets largest_start and largest_end with the
 	   largest available contiguous block
+
+	   while doing so, mem_start and mem_end are also
+	   set to the min and max values respectively
 	*/
 	parse_map( map, count, add_range );
 
@@ -141,33 +144,21 @@ void bootstrap_memory( multiboot_info_t *mboot )
 	remove_range( (void*)0xB8000, (void*)0xFFFFF ); // No VGA etc
 	remove_range( KERNEL_START, KERNEL_END ); // the kernel itself
 
+	/*
+	   The following lines of code calculates the total number of
+	   pages in the system and then calculates the number of bytes
+	   requried to track all the pages - 1 bit for a page
+	   This is the map_size
+	*/
+	pages = (size_t)( (mem_end - mem_start + 1) / PAGE_SIZE );
+	map_size = (pages / BLOCK_BITS) * BLOCK_SIZE;
+	if ( (pages % BLOCK_BITS) != 0 ) map_size += BLOCK_SIZE;
 
 
 
 #if 0
-	parse_modules( (module_t*)(mboot->mods_addr), mboot->mods_count,
-						callback_rem );
 
 
-	callback_rem( (void*)mboot, 
-							(void*)(mboot + sizeof(multiboot_info_t) - 1));
-
-	callback_rem( (void*)0, (void*)0xFFF );	// Never return NULL
-	callback_rem( (void*)0xB8000, (void*)0xFFFFF ); // No VGA etc
-	callback_rem( KERNEL_START, KERNEL_END );
-
-
-	dmesg( "Memory range of (%i) required for management [%p:%p]\n",
-					(int)(mem_end - mem_start + 1),
-					mem_start, mem_end );
-	dmesg( "Found working area of (%i) bytes [%p:%p]\n",
-					(int)(largest_end - largest_start + 1),
-					largest_start, largest_end );
-
-
-	pages = (size_t)( (mem_end - mem_start + 1) / PAGE_SIZE );
-	map_size = (pages / BLOCK_BITS) * BLOCK_SIZE;
-	if ( (pages % BLOCK_BITS) != 0 ) map_size += BLOCK_SIZE;
 
 	dmesg( "Required management size (%i) bytes for (%i) pages at [%p,%p]\n",
 					map_size, 

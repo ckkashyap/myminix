@@ -6,6 +6,18 @@
 #define PAGE_SIZE		4096
 #endif
 
+
+#ifndef BLOCK_TYPE
+#define BLOCK_TYPE	unsigned int
+#endif
+#ifndef BLOCK_SIZE
+#define	BLOCK_SIZE  sizeof(BLOCK_TYPE)
+#endif
+#ifndef BLOCK_BITS
+#define	BLOCK_BITS	(BLOCK_SIZE*8)
+#endif
+
+
 #ifndef NULL
 #define NULL (void*)0
 #endif
