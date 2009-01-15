@@ -180,9 +180,6 @@ void bootstrap_memory( multiboot_info_t *mboot )
 	remove_physmem_range( (void*)0xB8000, (void*)0xFFFFF ); // No VGA etc
 	remove_physmem_range( KERNEL_START, KERNEL_END );
 	remove_physmem_range( largest_start, largest_start + map_size - 1 );
-
-
-	show_memory_map();
 }
 
 

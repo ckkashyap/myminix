@@ -158,35 +158,6 @@ void memory_set( void *pstart, void *pend, int used )
 
 #define	TO_PTR( page )	(void*)(((uintptr_t)page) * PAGE_SIZE + (uintptr_t)memory_offset)
 
-void show_memory_map()
-{
-	int i = 0;
-	int last = 0;
-	int taken = 0;
-	if ( ISSET(0) ) taken = 1;
-	
-
-	for ( i = 0; i < memory_pages; i++ )
-	{
-		if ( ISSET(i) && (taken == 0) )
-		{
-			last = i;
-			taken = 1;
-		}
-		else
-		if ( (! (ISSET(i))) && ( taken == 1 ) )
-		{
-			last = i;
-			taken = 0;
-		}
-	}
-
-}
-
-
-
-
-
 void init_physmem( void* offset, uint32_t *map, size_t pages )
 {
 	int i,j;
@@ -205,7 +176,3 @@ void init_physmem( void* offset, uint32_t *map, size_t pages )
 		SET( j + i );
 
 }
-
-
-
-
